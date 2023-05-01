@@ -1,0 +1,415 @@
+[
+    {
+        "id": "e5d16ba0561442b7",
+        "type": "tab",
+        "label": "Artefect API",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8afb14f10db0a2c7",
+        "type": "http in",
+        "z": "e5d16ba0561442b7",
+        "name": "/artefact",
+        "url": "/artefact",
+        "method": "post",
+        "upload": true,
+        "swaggerDoc": "",
+        "x": 260,
+        "y": 320,
+        "wires": [
+            [
+                "c67eec98f01b3cb0",
+                "3f6747a3de99e798",
+                "b0b2687e4da0afc1",
+                "1b7aa17e5185fe75"
+            ]
+        ]
+    },
+    {
+        "id": "e61dbdf8c552e8a3",
+        "type": "comment",
+        "z": "e5d16ba0561442b7",
+        "name": "Artefact API",
+        "info": "",
+        "x": 170,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "c67eec98f01b3cb0",
+        "type": "http response",
+        "z": "e5d16ba0561442b7",
+        "name": "ok",
+        "statusCode": "200",
+        "headers": {},
+        "x": 490,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "3f6747a3de99e798",
+        "type": "debug",
+        "z": "e5d16ba0561442b7",
+        "name": "Metadata",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "b0b2687e4da0afc1",
+        "type": "jimp-image",
+        "z": "e5d16ba0561442b7",
+        "name": "",
+        "data": "payload.image",
+        "dataType": "msg",
+        "ret": "img",
+        "parameter1": "",
+        "parameter1Type": "msg",
+        "parameter2": "",
+        "parameter2Type": "msg",
+        "parameter3": "",
+        "parameter3Type": "msg",
+        "parameter4": "",
+        "parameter4Type": "msg",
+        "parameter5": "",
+        "parameter5Type": "msg",
+        "parameter6": "",
+        "parameter6Type": "msg",
+        "parameter7": "",
+        "parameter7Type": "msg",
+        "parameter8": "",
+        "parameter8Type": "msg",
+        "sendProperty": "payload",
+        "sendPropertyType": "msg",
+        "parameterCount": 0,
+        "jimpFunction": "none",
+        "selectedJimpFunction": {
+            "name": "none",
+            "fn": "none",
+            "description": "Just loads the image.",
+            "parameters": []
+        },
+        "x": 490,
+        "y": 400,
+        "wires": [
+            [
+                "b682757a2020be2e"
+            ]
+        ]
+    },
+    {
+        "id": "b682757a2020be2e",
+        "type": "image viewer",
+        "z": "e5d16ba0561442b7",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "active": true,
+        "x": 730,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d346220b7e9b94d2",
+        "type": "function",
+        "z": "e5d16ba0561442b7",
+        "name": "POST - Add Event Note",
+        "func": "var input = JSON.parse(msg.payload);\nvar eventID = input.data.id;\nvar event = flow.get(\"event\");\n\nmsg.method = \"POST\";\n\nmsg.url = \"https://smartparks.pamdas.org/api/v1.0/activity/event/\" + eventID + \"/notes/\";\n\nmsg.payload = {\n    \"text\": event.summary\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1250,
+        "y": 320,
+        "wires": [
+            [
+                "24356ef190c2d707",
+                "44a0682259087b93"
+            ]
+        ]
+    },
+    {
+        "id": "1131f79bd1e4cd8b",
+        "type": "http request",
+        "z": "e5d16ba0561442b7",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "accept",
+                "valueType": "other",
+                "valueValue": "application/json"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Authorization",
+                "valueType": "other",
+                "valueValue": "Bearer BBNcFfLBSnqUzlUUsjfvfEwtN0vZSR"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 1030,
+        "y": 320,
+        "wires": [
+            [
+                "d346220b7e9b94d2",
+                "34e62ccb1229f801",
+                "3910695d6cf7dd7a"
+            ]
+        ]
+    },
+    {
+        "id": "24356ef190c2d707",
+        "type": "http request",
+        "z": "e5d16ba0561442b7",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "accept",
+                "valueType": "other",
+                "valueValue": "application/json"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Authorization",
+                "valueType": "other",
+                "valueValue": "Bearer BBNcFfLBSnqUzlUUsjfvfEwtN0vZSR"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 1510,
+        "y": 320,
+        "wires": [
+            [
+                "da6b15903525e9e4"
+            ]
+        ]
+    },
+    {
+        "id": "beec1825f84dd259",
+        "type": "debug",
+        "z": "e5d16ba0561442b7",
+        "name": "POST - Camera Trap Event",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "34e62ccb1229f801",
+        "type": "debug",
+        "z": "e5d16ba0561442b7",
+        "name": "HTTP Reply",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "44a0682259087b93",
+        "type": "debug",
+        "z": "e5d16ba0561442b7",
+        "name": "POST - Add notes to event_id",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1270,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "da6b15903525e9e4",
+        "type": "debug",
+        "z": "e5d16ba0561442b7",
+        "name": "HTTP Reply",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1670,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "3910695d6cf7dd7a",
+        "type": "function",
+        "z": "e5d16ba0561442b7",
+        "name": "POST - File upload to eventID",
+        "func": "var input = JSON.parse(msg.payload);\n\nvar eventID = input.data.id;\n\nmsg.method = \"POST\";\n\nmsg.url = \"https://smartparks.pamdas.org/api/v1.0/activity/event/\"+eventID+\"/files/\";\n\nmsg.payload = {\n    \"filecontent.file\": {\n        \"value\": flow.get(\"image.content\"),\n        \"options\": {\n            \"filename\": new Date(Date.now()).toISOString() + \".jpg\" //flow.get(\"image.filename\")\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1270,
+        "y": 400,
+        "wires": [
+            [
+                "dd566d7a8d19eac8",
+                "da9ab5435d24a2ac"
+            ]
+        ]
+    },
+    {
+        "id": "dd566d7a8d19eac8",
+        "type": "http request",
+        "z": "e5d16ba0561442b7",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "accept",
+                "valueType": "other",
+                "valueValue": "application/json"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Authorization",
+                "valueType": "other",
+                "valueValue": "Bearer BBNcFfLBSnqUzlUUsjfvfEwtN0vZSR"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "multipart/form-data"
+            }
+        ],
+        "x": 1510,
+        "y": 360,
+        "wires": [
+            [
+                "adeeabadd84f043d"
+            ]
+        ]
+    },
+    {
+        "id": "da9ab5435d24a2ac",
+        "type": "debug",
+        "z": "e5d16ba0561442b7",
+        "name": "POST - Add file to event_id",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1260,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "adeeabadd84f043d",
+        "type": "debug",
+        "z": "e5d16ba0561442b7",
+        "name": "HTTP Reply",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1670,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "1b7aa17e5185fe75",
+        "type": "function",
+        "z": "e5d16ba0561442b7",
+        "name": "POST - Camera Trap Event",
+        "func": "flow.set(\"event\", msg.payload);\nvar image = Buffer.from(msg.payload.image, 'base64');\nflow.set(\"image.content\", image);\nflow.set(\"image.filename\", msg.payload.media_name);\nflow.set(\"image.contentType\", msg.payload.type);\n\nvar input = msg.payload;\n\nmsg.method = \"POST\";\n\nmsg.url = \"https://smartparks.pamdas.org/api/v1.0/activity/events/\";\n\nmsg.payload = {\n    \"event_type\": \"cameratrap_rep\",\n    \"title\": input.camera_trap_name + \" - Activity detected\",\n    \"event_details\": {\n        \"cameratraprep_camera-name\": input.camera_trap_name,\n        \"cameratraprep_camera-make\": \"Smart Parks xGWild\",\n        \"cameratraprep_camera-version\": \"version 1\",\n        \"detected\": input.preferred_model\n    },\n    \"location\": {\n        \"latitude\": input.latitude,\n        \"longitude\": input.longitude\n    },\n    \"priority\": 300,\n    \"site\": \"smartparks\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 320,
+        "wires": [
+            [
+                "beec1825f84dd259",
+                "1131f79bd1e4cd8b"
+            ]
+        ]
+    }
+]
