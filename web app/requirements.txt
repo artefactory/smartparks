@@ -1,0 +1,15 @@
+streamlit==1.18.1
+google-cloud-storage==2.7.0
+pydata-google-auth==1.7.0
+PyYAML==6.0
+pytz==2022.7.1
+fsspec==2023.1.0
+earthengine-api==0.1.317
+geemap==0.13.1
+protobuf==3.20.3
+opencv-python==4.7.0.68
+Pillow==9.1.0
+google-cloud-videointelligence==2.10.1
+google-cloud-vision==3.3.1
+google-api-python-client==1.12.11
+pandas-gbq==0.19.1
