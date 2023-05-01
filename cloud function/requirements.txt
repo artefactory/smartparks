@@ -1,0 +1,15 @@
+# Function dependencies, for example:
+# package>=version
+google-cloud-vision
+google-cloud-videointelligence
+google-cloud-storage
+google-cloud-bigquery
+fsspec
+pandas
+gcsfs
+requests
+flask
+google-api-python-client==1.10.0
+opencv-python==4.7.0.68
+pillow
+MoviePy
