@@ -1,0 +1,10 @@
+PROJECT: "smart-parks-cameras"
+BUCKET_NAME: "camera-traps-media"
+OUTPUT_BUCKET_NAME: "models-outputs"
+CAMERA_NAMES: [ "camera-trap-1", "camera-trap-2", "camera-trap-3"]
+TIME_ZONE: "Europe/Amsterdam"
+THRESHOLD: 0.5
+CAMERAS_METADATA_FILE: "metadata.csv"
+IMAGE_EXTENSIONS: [".jpeg", ".jpg", ".png", ".gif", ".raw", ".bmp", ".pdf", ".webp", ".ico", ".tiff"]
+VIDEO_EXTENSIONS: [".mov", ".mpeg4", ".mp4", ".avi"]
+USE_CASES: ["label detection","object detection", "people detection"]
