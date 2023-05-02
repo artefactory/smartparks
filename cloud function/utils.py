@@ -125,7 +125,7 @@ def create_json(json_object, filename: str) -> None:
     blob.upload_from_string(data=json_object, content_type="application/json")
 
 
-def get_camera_trap_metadata(camera_trap_name: str) -> Tuple[str, float, float]:
+def get_camera_trap_metadata(camera_trap_name: str) -> Tuple[float, float]:
     """
     This function retrieves the metadata for a given camera trap.
 
@@ -133,19 +133,17 @@ def get_camera_trap_metadata(camera_trap_name: str) -> Tuple[str, float, float]:
     camera_trap_name (str): The name of the camera trap for which to retrieve metadata.
 
     Returns:
-    Tuple[str, float, float]: A tuple of preferred model name, longitude, and latitude.
+    Tuple[float, float]: A tuple of longitude, and latitude.
     """
 
     # Get the dataframe of metadata information for all camera traps
     df = pd.read_csv(CAMERA_TRAPS_METADATA_PATH)
 
-    # Get the values of the preferred model, longitude, and latitude for the camera trap
-    # preferred_model = df.preferred_model.values[0]
+    # Get the values of the longitude, and latitude for the camera trap
     longitude = df.loc[df['name'] == camera_trap_name, 'longitude']
     latitude = df.loc[df['name'] == camera_trap_name, 'latitude']
 
     # Return the metadata as a tuple
-    # return preferred_model, longitude, latitude
     return longitude, latitude
 
 
