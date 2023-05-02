@@ -72,10 +72,10 @@ def get_predictions(event, context):
     # If the file is an image, process it
     if extension in IMAGE_EXTENSIONS:
         
-        # Call the Vision API to get image annotations
+        # Call the Vision API
         response = get_image_response(gcs_uri, IMAGE_USE_CASES.values())
         
-        # Insert the image annotations into BigQuery
+        # Insert the API response into BigQuery
         bigquery_insert(PROJECT, "images", camera_trap_name, timestamp.strftime("%Y-%m-%d %H:%M:%S"), gcs_uri, AnnotateImageResponse.to_json(response))
         
         # Get the best detection and image response
@@ -97,10 +97,10 @@ def get_predictions(event, context):
     # If the file is a video, process it
     elif extension in VIDEO_EXTENSIONS:
         
-        # Call the Video Intelligence API to get video annotations
+        # Call the Video Intelligence API 
         response = get_video_response(gcs_uri, VIDEO_USE_CASES.values())
         
-        # Insert the video annotations into BigQuery
+        # Insert the API response into BigQuery
         bigquery_insert(PROJECT, "videos", camera_trap_name, timestamp.strftime("%Y-%m-%d %H:%M:%S"), gcs_uri, AnnotateVideoResponse.to_json(response))
         
         # Get the best detection and video response
