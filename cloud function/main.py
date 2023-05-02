@@ -44,9 +44,9 @@ def get_predictions(event, context):
     # Get the camera_trap_name
     camera_trap_name = media_name.split("/")[0]
     print(camera_trap_name)
-    # preferred_model, longitude, latitude = get_camera_trap_metadata(camera_trap_name)
+    
+    # Get camera trap's coordinates
     longitude, latitude = get_camera_trap_metadata(camera_trap_name)
-
 
     gcs_uri = "gs://" + f"{INPUT_BUCKET_NAME}/" + media_name
 
@@ -62,8 +62,7 @@ def get_predictions(event, context):
         "media_name": media_name.split("/")[1],
         "type": event["contentType"],
         "size": event["size"],
-        # "preferred_model": preferred_model,
-        "input_url": gcs_uri
+        "input_url": gcs_uri,
     }
 
     if extension in IMAGE_EXTENSIONS:
