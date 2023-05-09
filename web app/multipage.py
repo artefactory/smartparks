@@ -28,7 +28,7 @@ class MultiPage:
 
     def run(self):
 
-        # Render the spartparks log on top of the sidebar
+        # Render the spartparks logo on top of the sidebar
         image = Image.open("images/smartparks_logo.png")
         st.sidebar.image(image, use_column_width=True)
 
