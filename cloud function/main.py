@@ -31,7 +31,9 @@ from utils import (
 
 
 def get_predictions(event, context):
-    """Triggered by a change to a Cloud Storage bucket.
+    """
+    Triggered by a change to a Cloud Storage bucket.
+
     Args:
          event (dict): Event payload.
          context (google.cloud.functions.Context): Metadata for the event.
@@ -78,14 +80,14 @@ def get_predictions(event, context):
         # Insert the API response into BigQuery
         bigquery_insert(PROJECT, "images", camera_trap_name, timestamp.strftime("%Y-%m-%d %H:%M:%S"), gcs_uri, AnnotateImageResponse.to_json(response))
         
-        # Get the best detection and image response
-        best_detection, image_response =  get_image_outputs(response)
+        # Get the best detection and image outputs
+        best_detection, image_outputs = get_image_outputs(response)
         
         # Draw bounding boxes on the image
-        annotated_image = draw_bounding_boxes(media_name, image_response["bounding_boxes"])
+        annotated_image = draw_bounding_boxes(media_name, image_outputs["bounding_boxes"])
         
         # Add the summary and annotated image to the metadata dictionary
-        metadata["summary"] = image_response["summary"]
+        metadata["summary"] = image_outputs["summary"]
         metadata["image"] = annotated_image
         
         # Update the camera trap metadata with the best detection and timestamp
@@ -104,13 +106,13 @@ def get_predictions(event, context):
         bigquery_insert(PROJECT, "videos", camera_trap_name, timestamp.strftime("%Y-%m-%d %H:%M:%S"), gcs_uri, AnnotateVideoResponse.to_json(response))
         
         # Get the best detection and video response
-        best_detection, video_response = get_video_outputs(response)
+        best_detection, summary= get_video_outputs(response)
         
         # Annotate the first frame of the video with bounding boxes
         annotated_first_frame = annotate_video(response, media_name)
         
         # Add the summary and annotated image to the metadata dictionary
-        metadata["summary"] = video_response["summary"]
+        metadata["summary"] = summary
         metadata["image"] = annotated_first_frame
         
         # Update the camera trap metadata with the best detection and timestamp
