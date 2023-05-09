@@ -10,7 +10,6 @@ import pandas as pd
 import moviepy.editor as moviepy
 
 from datetime import datetime
-olf
 from google.cloud import storage
 from google.cloud import bigquery
 
@@ -52,8 +51,8 @@ def get_camera_trap_metadata(camera_trap_name: str) -> Tuple[float, float]:
     df = pd.read_csv(CAMERA_TRAPS_METADATA_PATH)
 
     # Get the values of the longitude, and latitude for the camera trap
-    longitude = df.loc[df['name'] == camera_trap_name, 'longitude']
-    latitude = df.loc[df['name'] == camera_trap_name, 'latitude']
+    longitude = df.loc[df["name"] == camera_trap_name, "longitude"]
+    latitude = df.loc[df["name"] == camera_trap_name, "latitude"]
 
     # Return the metadata as a tuple
     return longitude, latitude
@@ -67,12 +66,12 @@ def update_metadata(camera_trap_name: str, last_detection: str, last_activation:
     Returns:
         None: updates the metadata
     """
-    
+
     # Get the dataframe of metadata information for all camera traps
     df = pd.read_csv(CAMERA_TRAPS_METADATA_PATH)
 
-    df.loc[df['name'] == camera_trap_name, 'last_detection'] = last_detection
-    df.loc[df['name'] == camera_trap_name, 'last_activation'] = last_activation
+    df.loc[df["name"] == camera_trap_name, "last_detection"] = last_detection
+    df.loc[df["name"] == camera_trap_name, "last_activation"] = last_activation
 
     OUTPUT_BUCKET.blob("metadata.csv").upload_from_string(
         df.to_csv(index=None), content_type="text/csv"
@@ -127,7 +126,7 @@ def bigquery_insert(
 
     # Create a list containing a dictionary with the new row's values
     row_to_insert = [
-            {
+        {
             "timestamp": timestamp,
             "uri": uri,
             "response": response,
@@ -182,12 +181,13 @@ def draw_bounding_boxes(
         rect_end = (vertices[2]["x"] * width, vertices[2]["y"] * height)
         draw.rectangle((rect_start, rect_end), outline="green", width=2)
 
-
     # Save the image with the bounding boxes
     buffered = BytesIO()
     pillow_img.save(buffered, format="JPEG")
 
-    OUTPUT_BUCKET.blob(f"{file_name}").upload_from_string(buffered.getvalue(), content_type="image/jpeg")
+    OUTPUT_BUCKET.blob(f"{file_name}").upload_from_string(
+        buffered.getvalue(), content_type="image/jpeg"
+    )
 
     # Encode the image as a base64 string
     encoded_image = base64.b64encode(buffered.getvalue())
@@ -218,36 +218,15 @@ def get_image_response(gcs_uri: str, features: List[str]):
     image = {"source": source}
 
     # Specify the feature type to extract
-    requests = {"image": image, "features": [{"type_": feature} for feature in features]}
+    requests = {
+        "image": image,
+        "features": [{"type_": feature} for feature in features],
+    }
 
     # Use the API to annotate the image
     response = client.annotate_image(requests)
 
-    # Convert the response to JSON format and save it
-    response_json = AnnotateImageResponse.to_json(response)
-
     return response
-
-
-def get_image_content(gcs_uri: str) -> str:
-    """
-    This function retrieves an image from a Google Cloud Storage (GCS) bucket and returns its contents as a base64 encoded string.
-
-    Args:
-    gcs_uri (str): The URI of the image file in the GCS bucket.
-
-    Returns:
-    str: The base64 encoded contents of the image.
-
-    """
-
-    # Get the image file from the GCS bucket
-    blob = INPUT_BUCKET.get_blob(gcs_uri)
-
-    # Encode the image contents as a base64 string
-    encoded_image = base64.b64encode(blob.download_as_bytes())
-
-    return encoded_image
 
 
 def get_image_outputs(response: str) -> dict:
@@ -266,11 +245,10 @@ def get_image_outputs(response: str) -> dict:
     response = json.loads(AnnotateImageResponse.to_json(response))
     result = {}
 
-
     labels = response["localizedObjectAnnotations"]
-    labels = sorted(labels, key=lambda x: x['score'], reverse=True)
+    labels = sorted(labels, key=lambda x: x["score"], reverse=True)
 
-    best_detection = labels[0]['name']
+    best_detection = labels[0]["name"]
 
     result["predictions"] = labels
     result["predictions_count"] = len(labels)
@@ -313,42 +291,6 @@ def get_image_outputs(response: str) -> dict:
 ########################################################################## VIDEOS ##########################################################################
 
 
-def get_first_frame_content(gcs_uri: str) -> dict:
-    """
-    This function retrieves a video from a Google Cloud Storage (GCS) bucket, extracts its first frame, and returns the frame's contents as a jpg encoded string.
-
-    Args:
-    gcs_uri (str): The URI of the video file in the GCS bucket.
-
-    Returns:
-    dict: A dictionary containing the contents of the first frame of the video, encoded as a jpg image.
-          The key is "file" and the value is the encoded image. If the video cannot be read or the first frame cannot be extracted, returns None.
-
-    """
-
-    # Get the video file from the GCS bucket
-    blob = INPUT_BUCKET.get_blob(gcs_uri)
-
-    # Save the video to the /tmp directory
-    blob.download_to_filename("/tmp/video.mp4")
-
-    # Read the first frame of the video
-    vidcap = cv2.VideoCapture("/tmp/video.mp4")
-    success, image = vidcap.read()
-
-    # Encode the first frame as a jpg image
-    if success:
-        success, encoded_image = cv2.imencode(".jpg", image)
-        # Return the encoded image
-        if success:
-            os.remove("/tmp/video.mp4")
-            return base64.b64encode(encoded_image.tobytes())
-        else:
-            os.remove("/tmp/video.mp4")
-            print("Impossible to read uploaded video")
-
-
-
 def get_video_response(gcs_uri: str, features: List[str]):
     """
     This function analyzes a video stored in a Google Cloud Storage (GCS) bucket using Google's Video Intelligence API and returns the API's response.
@@ -382,7 +324,7 @@ def get_video_outputs(response):
 
     Returns:
       best_detection (str): The label of the most confidently detected object.
-      summary (str): A summary of the object and person detection annotations in the response. 
+      summary (str): A summary of the object and person detection annotations in the response.
                      The summary includes the number of objects detected and their average confidence, as well as the number of people detected.
     """
     # Convert AnnotateVideoResponse to a dictionary and extract the first annotation result
@@ -429,9 +371,9 @@ def get_video_outputs(response):
 
 def annotate_video(response, file_name):
     """
-    This function takes an `AnnotateVideoResponse` object containing video annotations and the name of the video file as input. 
+    This function takes an `AnnotateVideoResponse` object containing video annotations and the name of the video file as input.
     It saves the video file to the `/tmp` directory, opens the video file using OpenCV, loops over the frames of the video,
-    and draws bounding boxes around detected objects in each frame. It then saves the annotated video file to the `/tmp` directory, 
+    and draws bounding boxes around detected objects in each frame. It then saves the annotated video file to the `/tmp` directory,
     converts the annotated video file to the MP4 format, and uploads the annotated video file to a GCS bucket.
 
     Args:
@@ -442,7 +384,9 @@ def annotate_video(response, file_name):
       annotated_frame (str): The annotated frame in base64 format.
     """
 
-    data = json.loads(AnnotateVideoResponse.to_json(response))["annotationResults"][0]["objectAnnotations"]
+    data = json.loads(AnnotateVideoResponse.to_json(response))["annotationResults"][0][
+        "objectAnnotations"
+    ]
 
     # Get the video file from the GCS bucket
     blob = INPUT_BUCKET.get_blob(file_name)
@@ -459,18 +403,20 @@ def annotate_video(response, file_name):
 
     # Define the codec for the output video file
     fourcc = cv2.VideoWriter_fourcc(*"XVID")
-    
+
     # Get the video frame rate
     frame_rate = int(cap.get(cv2.CAP_PROP_FPS))
 
     # Create the VideoWriter object
-    out = cv2.VideoWriter("/tmp/annotated_video.avi", fourcc, frame_rate, (width, height))
+    out = cv2.VideoWriter(
+        "/tmp/annotated_video.avi", fourcc, frame_rate, (width, height)
+    )
 
     if not out.isOpened():
         print("Failed to open output video file")
 
     delta = 0.05
-    
+
     frame_count = 0
 
     # Loop over the frames of the video
@@ -506,7 +452,7 @@ def annotate_video(response, file_name):
 
         # Convert an annotated frame to base64
         if frame_count == 60:
-            _, buffer = cv2.imencode('.jpg', frame)
+            _, buffer = cv2.imencode(".jpg", frame)
             annotated_frame = base64.b64encode(buffer)
 
         # Write the annotated frame to the output video file
@@ -532,13 +478,3 @@ def annotate_video(response, file_name):
     os.remove("/tmp/annotated_video.mp4")
 
     return annotated_frame
-
-
-
-
-
-
-
-
-
-
