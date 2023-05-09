@@ -55,17 +55,6 @@ def app():
                 key=f"lat_{i}",
             )
 
-            # col5.selectbox(
-            #     "Preferred model",
-            #     USE_CASES,
-            #     index=USE_CASES.index(
-            #         df[df["name"] == camera_trap]["preferred_model"]
-            #         .values[0]
-            #         .replace("_", " ")
-            #     ),
-            #     key=f"model_{i}",
-            # )
-
     with buttons_container:
         button1, button2, _ = st.columns([10, 10, 150])
 
@@ -88,17 +77,16 @@ def app():
         url = col2.text_input("Camera streaming URL")
         longitude = col3.text_input("Longitude")
         latitude = col4.text_input("Latitude")
-        # preferred_model = col5.selectbox("Preferred use case", USE_CASES)
 
     # if the save button is clicked, update the metadata file
     if save:
         st.write("New camera trap added! 🎉")
         for i, camera_trap in enumerate(df["name"].values):
             df.at[i, "name"] = st.session_state[f"name_{i}"]
-            df.at[i, "streaming_url"] = st.session_state[f"url_{i}"]
+            df.at[i, "url"] = st.session_state[f"url_{i}"]
             df.at[i, "longitude"] = st.session_state[f"lon_{i}"]
             df.at[i, "latitude"] = st.session_state[f"lat_{i}"]
-            # df.at[i, "preferred_model"] = st.session_state[f"model_{i}"].replace(' ', '_')
+
         # add a new row to the dataframe
         if st.session_state.new_row:
             d = {
@@ -106,12 +94,12 @@ def app():
                 "latitude": latitude,
                 "longitude": longitude,
                 "url": url,
-                # "preferred_model": preferred_model.replace(' ', '_'),
                 "last_detection": "",
                 "last_activation": "",
             }
             new_row = pd.DataFrame(data=d, index=[0])
             df = df.append(new_row, ignore_index=True)
+
         update_metadata(OUTPUT_BUCKET_NAME, CAMERAS_METADATA_FILE, df)
         del st.session_state.new_row
         st.experimental_rerun()
