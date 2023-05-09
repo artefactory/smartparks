@@ -18,13 +18,9 @@ app = MultiPage()
 # Title of the main page
 st.title("Artefact 🤝 Smart Parks")
 
-
 # Add all your applications (pages) here
-
 app.add_page("📸 Images", cloudvision.app)
 app.add_page("🎥 Videos", videointelligence.app)
-
-# app.add_page("🎥 Videos", videos.app)
 app.add_page("🌍 Map", map.app)
 app.add_page("⚙️ Configuration", configuration.app)
 
