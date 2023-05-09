@@ -54,12 +54,12 @@ def app():
     if len(selected_date) == 2:
 
         df = run_query(
-            f"SELECT * FROM `{PROJECT}.images.{selected_camera_trap}`"
+            f"SELECT * FROM `{PROJECT}.images.{selected_camera_trap}` ORDER BY timestamp DESC"
         )
 
         df = filter_dataframe_by_date_time_range(df, selected_date, selected_time)
 
-        for index, row in df.iterrows():
+        for _, row in df.iterrows():
 
             image = row["uri"].replace(f"gs://{BUCKET_NAME}/", "")
 
@@ -93,49 +93,3 @@ def app():
             if face_annotations is not None:
                 for annotation in face_annotations:
                     col2.text(f"{face_annotations[annotation]} {annotation} detected")
-
-
-            # if selected_use_case == "label detection":
-            #     # display image
-            #     img_col.image(source_img, use_column_width=True)
-
-            #     # get labels
-            #     labels = get_labels(json.loads(row["response"]), selected_use_case)
-
-            #     # display labels
-            #     for label in labels:
-            #         col2.text(label + ": " + str(round(labels[label] * 100, 2)) + "%")
-            #         col2.progress(labels[label])
-
-            # elif selected_use_case == "object detection":
-
-            #     # # get bounding boxes
-            #     # bounding_boxes = get_bounding_boxes(json.loads(row["response"]))
-
-            #     # # display image
-            #     # bounding_boxes_img = draw_bounding_boxes(
-            #     #     BUCKET_NAME, image, bounding_boxes
-            #     # )
-            #     # img_col.image(bounding_boxes_img, use_column_width=True)
-
-            #     annotated_img = read_media(OUTPUT_BUCKET_NAME, image)
-            #     img_col.image(annotated_img)
-
-            #     # get labels
-            #     labels = get_labels(json.loads(row["response"]), selected_use_case)
-
-            #     # display labels
-            #     for label in labels:
-            #         col2.text(label + ": " + str(round(labels[label] * 100, 2)) + "%")
-            #         col2.progress(labels[label])
-
-            # elif selected_use_case == "people detection":
-            #     # display image
-            #     img_col.image(source_img, use_column_width=True)
-
-            #     # get annotations
-            #     face_annotations = get_face_annotations(json.loads(row["response"]))
-
-            #     # display annotations
-            #     for annotation in face_annotations:
-            #         col2.text(f"{face_annotations[annotation]} {annotation} detected")
