@@ -130,10 +130,10 @@ def get_camera_trap_metadata(camera_trap_name: str) -> Tuple[float, float]:
     This function retrieves the metadata for a given camera trap.
 
     Args:
-    camera_trap_name (str): The name of the camera trap for which to retrieve metadata.
+      camera_trap_name (str): The name of the camera trap for which to retrieve metadata.
 
     Returns:
-    Tuple[float, float]: A tuple of longitude, and latitude.
+      Tuple[float, float]: A tuple of longitude, and latitude.
     """
 
     # Get the dataframe of metadata information for all camera traps
@@ -171,11 +171,11 @@ def send_to_node_red(metadata: dict) -> None:
     """
     Sends metadata to Node-RED API
 
-    Parameters:
-    metadata (dict): metadata to be sent
+    Args:
+      metadata (dict): metadata to be sent
 
     Returns:
-    None
+      None
     """
     # node-red API url
     url = "https://nodered-xgwild.smartparks.org/artefact"
@@ -192,7 +192,8 @@ def bigquery_insert(
     uri: str,
     response: json,
 ):
-    """Inserts a new row into a BigQuery table.
+    """
+    Inserts a new row into a BigQuery table.
 
     Args:
         project (str): The ID of the project containing the BigQuery table.
@@ -207,7 +208,6 @@ def bigquery_insert(
 
     Raises:
         google.api_core.exceptions.GoogleAPIError: If an error occurs while inserting the row.
-
     """
 
     # Set the ID of the table to insert the row into
@@ -231,7 +231,6 @@ def bigquery_insert(
     else:
         # Print any errors to the console
         print("Encountered errors while inserting rows: {}".format(errors))
-
 
 
 def draw_bounding_boxes(
@@ -519,12 +518,11 @@ def get_video_response(gcs_uri: str, features: List[str]):
     This function analyzes a video stored in a Google Cloud Storage (GCS) bucket using Google's Video Intelligence API and returns the API's response.
 
     Args:
-    gcs_uri (str): The URI of the video file in the GCS bucket.
-    features (List[str]): The types of analysis to be performed on the video, such as "LABEL_DETECTION".
+      gcs_uri (str): The URI of the video file in the GCS bucket.
+      features (List[str]): The types of analysis to be performed on the video, such as "LABEL_DETECTION".
 
     Returns:
-    response: The response from the Video Intelligence API, containing the results of the video analysis.
-
+      response: The response from the Video Intelligence API, containing the results of the video analysis.
     """
 
     # Create a client for the Video Intelligence API
@@ -541,28 +539,23 @@ def get_video_response(gcs_uri: str, features: List[str]):
 
 def get_video_outputs(response):
     """
-    Given a video annotation response this function returns a dictionary containing the following:
-        - predictions: list of annotations based on the given use case
-        - predictions_count: count of annotations in the predictions list
-        - summary: string summarizing the predictions
+    Extracts object and person detection annotations from a Google Cloud Video Intelligence API response.
 
-    :param response: AnnotateVideoResponse object from Google Cloud Video Intelligence API
-    :type response: AnnotateVideoResponse
-    :type use_case: str
-    :return: dictionary containing predictions, predictions_count, and summary
-    :rtype: dict
+    Args:
+      response (AnnotateVideoResponse object): The response object returned by the Google Cloud Video Intelligence API.
+
+    Returns:
+      best_detection (str): The label of the most confidently detected object.
+      summary (str): A summary of the object and person detection annotations in the response. 
+                     The summary includes the number of objects detected and their average confidence, as well as the number of people detected.
     """
-
     # Convert AnnotateVideoResponse to a dictionary and extract the first annotation result
     response = json.loads(AnnotateVideoResponse.to_json(response))["annotationResults"][
         0
     ]
-    result = {}
-
 
     # Extract object annotations
     labels = response["objectAnnotations"]
-    result["predictions"] = labels
 
     # initialize the dictionary
     average_dict = {}
@@ -575,8 +568,6 @@ def get_video_outputs(response):
         # add the item value to the sum and increment the count
         average_dict[label]["sum"] += item["confidence"]
         average_dict[label]["count"] += 1
-
-    result["predictions_count"] = len(average_dict)
 
     # Create summary string
     summary = str(len(average_dict)) + " objects detected: "
@@ -593,13 +584,11 @@ def get_video_outputs(response):
 
     # Create summary string
     if len(labels) != 1:
-        summary += str(len(labels)) + " people detected: "
+        summary += str(len(labels)) + " people detected"
     else:
-        summary += str(len(labels)) + " person detected: "
+        summary += str(len(labels)) + " person detected"
 
-    result["summary"] = summary
-
-    return best_detection, result
+    return best_detection, summary
 
 
 def get_video_outputs_old(response, use_case):
@@ -687,6 +676,19 @@ def get_video_outputs_old(response, use_case):
 
 
 def annotate_video(response, file_name):
+    """
+    This function takes an `AnnotateVideoResponse` object containing video annotations and the name of the video file as input. 
+    It saves the video file to the `/tmp` directory, opens the video file using OpenCV, loops over the frames of the video,
+    and draws bounding boxes around detected objects in each frame. It then saves the annotated video file to the `/tmp` directory, 
+    converts the annotated video file to the MP4 format, and uploads the annotated video file to a GCS bucket.
+
+    Args:
+       response (AnnotateVideoResponse): An `AnnotateVideoResponse` object containing video annotations.
+       file_name (str): The name of the video file.
+
+    Returns:
+      annotated_frame (str): The annotated frame in base64 format.
+    """
 
     data = json.loads(AnnotateVideoResponse.to_json(response))["annotationResults"][0]["objectAnnotations"]
 
@@ -703,12 +705,10 @@ def annotate_video(response, file_name):
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-    
     # Define the codec for the output video file
-    # fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     fourcc = cv2.VideoWriter_fourcc(*"XVID")
-
-
+    
+    # Get the video frame rate
     frame_rate = int(cap.get(cv2.CAP_PROP_FPS))
 
     # Create the VideoWriter object
@@ -738,7 +738,6 @@ def annotate_video(response, file_name):
 
                     frame_time = float(frame_data["timeOffset"].split("s")[0])
 
-
                     if video_time - delta <= frame_time <= video_time + delta:
                         box = frame_data["normalizedBoundingBox"]
 
@@ -763,15 +762,16 @@ def annotate_video(response, file_name):
 
         frame_count += 1
 
-
     # Release the video capture and video writer objects, and destroy the OpenCV windows
     cap.release()
     out.release()
     cv2.destroyAllWindows()
 
+    # Convert the video to mp4
     mp4_video = moviepy.VideoFileClip("/tmp/annotated_video.avi")
     mp4_video.write_videofile("/tmp/annotated_video.mp4")
 
+    # Save the video in Cloud Storage
     OUTPUT_BUCKET.blob(file_name).upload_from_filename("/tmp/annotated_video.mp4")
 
     # Delete the temporary video files
