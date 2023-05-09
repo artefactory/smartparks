@@ -10,7 +10,7 @@ import pandas as pd
 import moviepy.editor as moviepy
 
 from datetime import datetime
-
+olf
 from google.cloud import storage
 from google.cloud import bigquery
 
@@ -398,82 +398,6 @@ def get_image_outputs(response: str) -> dict:
     return best_detection, result
 
 
-def get_image_outputs_old(response: str, use_case: str) -> dict:
-    """
-    Get image response from given response and use case.
-
-    This function takes a response in the form of a json string, and a use case string, which specifies the type of annotations required on the image. Based on the use case, the function performs the relevant annotations, computes relevant statistics and summarizes the results.
-
-    The function returns a dictionary containing the predictions, prediction count, summary and additional information (such as bounding boxes) depending on the use case.
-
-    Args:
-    response (str): The response to be processed in the form of a json string.
-    use_case (str): The type of annotations required on the image, one of "label_detection", "object_detection", "face_detection".
-
-    Returns:
-    dict: A dictionary containing the predictions, prediction count, summary and additional information depending on the use case.
-    """
-
-    response = json.loads(AnnotateImageResponse.to_json(response))
-    result = {}
-
-    if use_case == "label_detection":
-        labels = response["labelAnnotations"]
-        labels = sorted(labels, key=lambda x: x['score'], reverse=True)
-
-        result["predictions"] = labels
-        result["predictions_count"] = len(labels)
-
-        summary = str(len(labels)) + " labels detected: "
-        for label in labels:
-            summary += f"{label['description']} {round(label['score']*100, 2)}%     "
-        result["summary"] = summary
-
-    elif use_case == "object_detection":
-        labels = response["localizedObjectAnnotations"]
-        labels = sorted(labels, key=lambda x: x['score'], reverse=True)
-
-        result["predictions"] = labels
-        result["predictions_count"] = len(labels)
-
-        summary = str(len(labels)) + " objects detected: "
-        bounding_boxes = []
-        for label in labels:
-            summary += f"{label['name']} {round(label['score']*100, 2)}%     "
-            bounding_boxes.append(label["boundingPoly"]["normalizedVertices"])
-        result["summary"] = summary
-        result["bounding_boxes"] = bounding_boxes
-
-    else:
-        labels = response["faceAnnotations"]
-        result["predictions"] = labels
-        result["predictions_count"] = len(labels)
-
-        joy_detected = 0
-        sorrow_detected = 0
-        anger_detected = 0
-        surprise_detected = 0
-        headwear_detected = 0
-
-        summary = str(len(labels)) + " people detected: "
-        for label in labels:
-            if label["joyLikelihood"] >= 3:
-                joy_detected += 1
-            if label["sorrowLikelihood"] >= 3:
-                sorrow_detected += 1
-            if label["angerLikelihood"] >= 3:
-                anger_detected += 1
-            if label["surpriseLikelihood"] >= 3:
-                surprise_detected += 1
-            if label["headwearLikelihood"] >= 3:
-                headwear_detected += 1
-
-        summary += f"{joy_detected} joy, {sorrow_detected} sorrow, {anger_detected} anger, {surprise_detected} surprise, {headwear_detected} headwear"
-        result["summary"] = summary
-
-    return result
-
-
 ########################################################################## VIDEOS ##########################################################################
 
 
@@ -589,90 +513,6 @@ def get_video_outputs(response):
         summary += str(len(labels)) + " person detected"
 
     return best_detection, summary
-
-
-def get_video_outputs_old(response, use_case):
-    """
-    Given a video annotation response and a use case, this function returns a dictionary containing the following:
-        - predictions: list of annotations based on the given use case
-        - predictions_count: count of annotations in the predictions list
-        - summary: string summarizing the predictions
-
-    :param response: AnnotateVideoResponse object from Google Cloud Video Intelligence API
-    :type response: AnnotateVideoResponse
-    :param use_case: string specifying the desired output type ("label_detection", "object_detection", or "person_detection")
-    :type use_case: str
-    :return: dictionary containing predictions, predictions_count, and summary
-    :rtype: dict
-    """
-
-    # Convert AnnotateVideoResponse to a dictionary and extract the first annotation result
-    response = json.loads(AnnotateVideoResponse.to_json(response))["annotationResults"][
-        0
-    ]
-    result = {}
-
-    if use_case == "label_detection":
-        # Extract label annotations
-        labels = response["segmentLabelAnnotations"]
-        labels = sorted(labels, key=lambda x: x['segments'][0]['confidence'], reverse=True)
-
-        result["predictions"] = labels
-        result["predictions_count"] = len(labels)
-
-        # Create summary string
-        summary = str(len(labels)) + " labels detected: "
-
-        for label in labels:
-            summary += f"{label['entity']['description']} {round(label['segments'][0]['confidence']*100, 2)}%     "
-
-        result["summary"] = summary
-
-    elif use_case == "object_detection":
-        # Extract object annotations
-        labels = response["objectAnnotations"]
-        result["predictions"] = labels
-
-        # initialize the dictionary
-        average_dict = {}
-
-        for item in labels:
-            # if the item is not in the dictionary, initialize its sum and count
-            label = item["entity"]["description"]
-            if label not in average_dict:
-                average_dict[label] = {"sum": 0, "count": 0}
-            # add the item value to the sum and increment the count
-            average_dict[label]["sum"] += item["confidence"]
-            average_dict[label]["count"] += 1
-
-        result["predictions_count"] = len(average_dict)
-
-        # Create summary string
-        summary = str(len(average_dict)) + " objects detected: "
-
-        # calculate the average and update the summary
-        for item, item_info in average_dict.items():
-            average = item_info["sum"] / item_info["count"]
-            summary += f"{item} {round(average*100, 2)}%     "
-
-        result["summary"] = summary
-
-    else:
-        # Extract person detection annotations
-        labels = response["personDetectionAnnotations"]
-        result["predictions"] = labels
-        result["predictions_count"] = len(labels)
-
-        # Create summary string
-        if len(labels) != 1:
-            summary = str(len(labels)) + " people detected: "
-        else:
-            summary = str(len(labels)) + " person detected: "
-
-        result["summary"] = summary
-
-    return result
-
 
 
 def annotate_video(response, file_name):
