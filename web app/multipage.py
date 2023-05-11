@@ -29,8 +29,10 @@ class MultiPage:
     def run(self):
 
         # Render the spartparks logo on top of the sidebar
-        image = Image.open("images/smartparks_logo.png")
-        st.sidebar.image(image, use_column_width=True)
+        st.sidebar.image(
+            "https://jasperspronk.nl/wp-content/uploads/2020/11/Smart_parks_logo.png",
+            use_column_width=True,
+        )
 
         # Drodown to select the page to run
         page = st.sidebar.selectbox(
