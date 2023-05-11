@@ -4,7 +4,6 @@ import streamlit as st
 from google.oauth2 import service_account
 from google.cloud import storage
 import yaml
-import json
 
 
 # Create API client.
@@ -80,7 +79,10 @@ def get_labels(response):
     # Extract labels and their scores from the response dictionary
     labels = response["localizedObjectAnnotations"]
     for label in labels:
-        result[label["name"]] = label["score"]
+        name = label["name"]
+        score = label["score"]
+        if name not in result:
+            result[name] = score
 
     # Sort the labels and their scores in descending order of score
     sorted_dict = dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
