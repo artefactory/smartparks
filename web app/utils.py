@@ -138,10 +138,17 @@ def get_face_annotations(response):
         If none of the emotions or headwear are detected, returns None.
     """
 
-    annotations_dict = {"joy": 0, "sorrow": 0, "anger": 0, "surprise": 0, "headwear": 0}
-
     # Extract face annotations from the response dictionary
     labels = response["faceAnnotations"]
+
+    annotations_dict = {
+        "people": len(labels),
+        "joy": 0,
+        "sorrow": 0,
+        "anger": 0,
+        "surprise": 0,
+        "headwear": 0,
+    }
 
     # Update the annotations dictionary with the number of faces expressing each emotion and the presence of headwear
     for label in labels:
