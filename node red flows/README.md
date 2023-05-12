@@ -42,6 +42,6 @@ The best way to do so is to create a service account, give it permission to writ
 
 That’s it, now you are really ready to go! 
 
-Another cool feature of Node-RED is that you can share flows in JSON format. This means that by importing [this](https://github.com/artefactory/smartparks/blob/main/node%20red%20flows/write_to_gcp.json) JSON file you can recreate and test the just described flow. 
+Another cool feature of Node-RED is that you can share flows in JSON format. This means that by importing the JSON files in this folder you can recreate and test the just described flows. 
 
 ![How to import Node-RED nodes](https://cdn-images-1.medium.com/max/7096/1*5T8EU3GpooTyRSWbHQED1g.png)
