@@ -1,6 +1,6 @@
 # From the bushes🌿to GCP 💻
 
-So now how can we get the media taken from the camera traps in GCP in order to trigger the rest of the pipeline? Easy, to do so we used Google-developed GCP nodes to extend Node-RED and interact with GCP functions.
+How can we get the media taken from the camera traps in GCP in order to trigger the rest of the pipeline? Easy, to do so we used Google-developed GCP nodes to extend Node-RED and interact with GCP functions.
 
 ![Camera traps — GCP connection](https://cdn-images-1.medium.com/max/6946/1*N0BvcOD9Ue-vOwfYcMvuSA.png)
 
