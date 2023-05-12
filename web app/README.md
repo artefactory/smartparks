@@ -37,19 +37,19 @@ The project structure is organized in a way that separates its functionality int
 
 * **.streamlit/** — This directory contains configuration files for Streamlit. The *secrets.toml* file is used for storing secrets such as API keys and authentication keys.
 
-* **app.py **— This is the main Python script that runs the Smart Parks application.
+* **app.py**— This is the main Python script that runs the Smart Parks application.
 
 * **multipage.py** — This Python script defines the framework for generating multiple Streamlit applications through an object-oriented framework.
 
-* **utils.py **— This Python script contains utility functions used throughout the web app.
+* **utils.py**— This Python script contains utility functions used throughout the web app.
 
 * **config.yml** — This is a YAML configuration file used to store various configuration options for the Smart Parks application.
 
-* **Dockerfile **— This is a Docker configuration file used to create the Docker image of the project.
+* **Dockerfile**— This is a Docker configuration file used to create the Docker image of the project.
 
 * **requirements.txt** — This file lists the dependencies required by the application.
 
-* **.dockerignore **— This file specifies files and directories that should be ignored when creating the Docker image.
+* **.dockerignore**— This file specifies files and directories that should be ignored when creating the Docker image.
 
 * **.gitignore** — This file specifies files and directories that should be ignored when pushing the code to a Git repository.
 
