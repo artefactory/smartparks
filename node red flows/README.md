@@ -42,6 +42,22 @@ The best way to do so is to create a service account, give it permission to writ
 
 That’s it, now you are really ready to go! 
 
+## Earth Ranger event creation flow
+
+The very final step of our pipeline is to create an event on the Earth Ranger website that includes all the data necessary for park rangers to understand why the camera trap was triggered, and to use this information to take appropriate actions.
+
+![Node-RED flow to create an event in the Earth Ranger website](https://cdn-images-1.medium.com/max/2872/1*PD83mLRhMfdLxaKoxB_gnw.png)
+
+The flow begins with an *Http in* node that serves as the endpoint where the metadata dictionary sent by the Cloud Function is received. The metadata is then processed through a series of transformations and *Http POST* to generate an event in Earth Ranger. Since it’s not currently possible to create an event with attachments using a single request, three requests are needed. The first request creates an empty event in Earth Ranger, while the other two attach the media captured by the camera traps and add the detection summary.
+
+The other nodes consist of dark green debug nodes, while the pink nodes display the annotated image from the metadata dictionary sent by the Cloud Function in Node-RED.
+
+The created Earth Ranger event looks like the one below:
+
+![Created Earth Ranger event](https://cdn-images-1.medium.com/max/2914/1*2f31YDMm-uq_4OT_sFHFYA.png)
+
+As you can see it presents an attachment, that is the camera trap image (or in the case of videos one of its frames) annotated with bounding boxes and a note that consists in the summary, in natural language, of the response of the Google Cloud Vision API used.
+
 ## Import flows 
 
 Another cool feature of Node-RED is that you can share flows in JSON format. This means that by importing the JSON files in this folder you can recreate and test the just described flows. 
