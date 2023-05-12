@@ -8,7 +8,7 @@ Node-RED is an open-source flow-based programming tool used for creating event-d
 
 One of the key reasons that Node-RED has become as popular as now is the ease with which developers can build additional nodes that encapsulate rich sets functions. Once written, these add-on nodes can be used by flow writers without having to know the complexities of their underlying operation. One just drags a new node onto the canvas and uses it. 
 
-One of these extensions is indeed the [node-red-contrib-google-cloud](https://flows.nodered.org/node/node-red-contrib-google-cloud) project. To install these nodes, navigate to the Node-RED system menu and select *Manage Palette*. Switch to the *Palette *tab and then switch to the *Install *tab within Palette. Search for the node set called *“node-red-contrib-google-cloud” *and then click *install*. Once installed, scroll down through the list of available palette nodes and you’ll find a GCP section containing the currently available GCP building blocks.
+One of these extensions is indeed the [node-red-contrib-google-cloud](https://flows.nodered.org/node/node-red-contrib-google-cloud) project. To install these nodes, navigate to the Node-RED system menu and select *Manage Palette*. Switch to the *Palette* tab and then switch to the *Install* tab within Palette. Search for the node set called *“node-red-contrib-google-cloud”* and then click *install*. Once installed, scroll down through the list of available palette nodes and you’ll find a GCP section containing the currently available GCP building blocks.
 
 ![How to install extension nodes](https://cdn-images-1.medium.com/max/8648/1*h2d4Io8Ez5MbjxmegVC4Ag.png)
 
