@@ -29,8 +29,6 @@ The goal of the project was to use an ML approach to ingest the data coming from
 
 ### Built With
 
-![Project workflow](https://cdn-images-1.medium.com/max/14844/1*mjB7Xmc6ey2G5PYdRmbarQ.png)
-
 - [Cloud Storage](https://cloud.google.com/storage/) - Used to store the camera trap media
 - [BigQuery](https://cloud.google.com/bigquery) - Used to store the API responses
 - [Cloud Vision API](https://cloud.google.com/vision/) - Used for image analysis 
@@ -39,6 +37,23 @@ The goal of the project was to use an ML approach to ingest the data coming from
 - [Cloud Functions](https://cloud.google.com/functions/) - Used as core component of the workflow
 - [Node-RED](https://nodered.org/) - Used to create events in Earth Ranger 
 - [Streamlit](https://streamlit.io/) - Used to develop the Web App
+
+<!-- USAGE -->
+## Workflow
+
+![Project workflow](https://cdn-images-1.medium.com/max/14844/1*mjB7Xmc6ey2G5PYdRmbarQ.png)
+
+As you can see everything starts when an image or a video is taken by a camera trap. The device sends an email to a dedicated mailbox. A Node-RED flow is then used to check if there are any new emails if so, it uploads their attachments to a Google Cloud Bucket. The upload triggers the rest of the pipeline. The Cloud Function is executed, it calls Google Cloud Vision APIs and:
+
+* Saves the responses in BigQuery
+
+* Saves the annotated images/videos in another bucket in Cloud Storage
+
+* Sends the responses to a Node-RED flow 
+
+Finally, from Node-RED the responses are sent to Earth Ranger, a real-time software solution that aids protected area managers, ecologists, and wildlife biologists in making more informed operational decisions for wildlife conservation. 
+
+In addition, we developed a simple web app that reads from Cloud Storage and BigQuery and allows the users to manage and monitor the camera traps.
 
 <!-- USAGE -->
 ## Usage
