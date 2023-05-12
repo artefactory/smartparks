@@ -39,6 +39,8 @@ The goal of the project was to use an ML approach to ingest the data coming from
 - [Streamlit](https://streamlit.io/) - Used to develop the Web App
 
 
+<img src="images/workflow.png" alt="Project Workflow" width="100%">
+
 <!-- USAGE -->
 ## Usage
 
