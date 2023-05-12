@@ -29,7 +29,7 @@ The goal of the project was to use an ML approach to ingest the data coming from
 
 ### Built With
 
-<img src="images/workflow.png" alt="Project Workflow" width="100%">
+![Project workflow](https://cdn-images-1.medium.com/max/14844/1*mjB7Xmc6ey2G5PYdRmbarQ.png)
 
 - [Cloud Storage](https://cloud.google.com/storage/) - Used to store the camera trap media
 - [BigQuery](https://cloud.google.com/bigquery) - Used to store the API responses
