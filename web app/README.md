@@ -1,4 +1,4 @@
-## The Web App 
+# The Web App 
 
 To complete the project we developed a Web App to manage and monitor the camera traps. As for the rest of the project we chose the approach able to provide the best result with the lowest effort, that’s why we designed our solution around [Streamlit ](https://streamlit.io/)and [Cloud Run](https://cloud.google.com/run). 
 
@@ -6,7 +6,7 @@ To complete the project we developed a Web App to manage and monitor the camera 
 
 * Cloud Run is a serverless computing platform provided by Google Cloud that enables users to run stateless containers in a fully managed environment. With Cloud Run, users can easily deploy and scale their applications, without needing to manage the underlying infrastructure or worry about server capacity. Compared to [App Engine](https://cloud.google.com/appengine), Cloud Run provides more flexibility and control over the environment in which the applications run. 
 
-### Streamlit project structure
+## Streamlit project structure
 
 We designed the code in order to be able to make it scalable, easy to understand, and modify. 
 
@@ -63,85 +63,11 @@ It has 2 methods:
 
 * run: That creates the sidebar and runs the app function
 
-    # multipage.py
-    
-    # Define the multipage class to manage the multiple apps in our program
-    class MultiPage:
-        """Framework for combining multiple streamlit applications."""
-    
-        def __init__(self) -> None:
-            """Constructor class to generate a list which will store all our applications as an instance variable."""
-            self.pages = []
-    
-        def add_page(self, title, func) -> None:
-            """Class Method to Add pages to the project
-    
-            Args:
-                title (string): The title of page which we are adding to the list of apps
-    
-                func: Python function to render this page in Streamlit
-            """
-    
-            self.pages.append({"title": title, "function": func})
-    
-        def run(self):
-    
-            # Render the spartparks logo on top of the sidebar
-            st.sidebar.image("https://jasperspronk.nl/wp-content/uploads/2020/11/Smart_parks_logo.png", use_column_width=True)
-    
-            # Drodown to select the page to run
-            page = st.sidebar.selectbox(
-                "App Navigation", self.pages, format_func=lambda page: page["title"]
-            )
-    
-            # run the app function
-            page["function"]()
+In the `app.py` python file you just have to import all the pages you want to use from the panels' folder, create an instance of the app, and use the `add_page` method to add the imported pages. That’s it, nothing else must be done.
 
-In the app.py python file you just have to import all the pages you want to use from the panels' folder, create an instance of the app, and use the add_pagemethod to add the imported pages. That’s it, nothing else must be done.
+The only thing left to highlight is that in the panels' files like `cloudvison.py` you have to define all the code inside a function (we always defined it as app). This function has no arguments and does not return anything.
 
-    # app.py
-    
-    from multipage import MultiPage
-    from panels import (
-        map,
-        configuration,
-        cloudvision,
-        videointelligence,
-    )  # import your pages here
-    
-    # Create an instance of the app
-    app = MultiPage()
-    
-    # Title of the main page
-    st.title("Artefact 🤝 Smart Parks")
-    
-    # Add all your applications (pages) here
-    app.add_page("📸 Images", cloudvision.app)
-    app.add_page("🎥 Videos", videointelligence.app)
-    app.add_page("🌍 Map", map.app)
-    app.add_page("⚙️ Configuration", configuration.app)
-    
-    # The main app
-    app.run()
-
-The only thing left to highlight is that in the panels' files like cloudvison.py you have to define all the code inside a function, we always defined it as app. This function has no arguments and does not return anything.
-
-    # cloudvision.py
-    
-    def app():
-    
-        # set title
-        st.markdown("### 📸 Cloud Vision")
-    
-        # create 2 columns to display the camera trap and date selectors alongside
-        col1, col2 = st.columns(2)
-    
-        # select box to select the camera trap
-        selected_camera_trap = col1.selectbox("Camera trap", CAMERA_NAMES)
-    
-        ...
-
-### Connect Streamlit to Google Cloud
+## Connect Streamlit to Google Cloud
 
 Now let’s see how to connect our streamlit web app to Google Cloud. We need to do it since to display the images/videos we have to read them from Cloud Storage. At the same time, we also want to read from BigQuery the full API response and other info like the timestamp. 
 
@@ -218,7 +144,7 @@ The other one is read_media that retrieves the media content given its name and 
 
 Both the functions make use of the st.cache_datadecorator to only rerun the function when the query changes or after ttl seconds.
 
-### How it looks like 
+## How it looks like 
 
 Let’s see how the web app looks page by page. 
 
@@ -238,9 +164,9 @@ Finally, the Configuration page allows for modifying camera trap locations and a
 
 ![Configuration page](https://cdn-images-1.medium.com/max/3826/1*YYhcod4HJDHYOBHS1I6MtA.png)
 
-### Deployment
+## Deployment
 
-The very final step is to deploy the app to make it accessible from the internet and only from our localhost.
+The very final step is to deploy the app to make it accessible from the internet and not only from our localhost.
 
 Both [Cloud Run](https://cloud.google.com/run) and [App Engine](https://cloud.google.com/appengine) are suitable options for deploying a Streamlit web app, but there are some differences to consider when deciding which one to use.
 
@@ -254,7 +180,7 @@ Deploying a web app in Cloud Run is very easy. Here are the steps:
 
 * **Containerize your web app:** To deploy a web app in Cloud Run, you will need to first containerize your app. This involves packaging your code and its dependencies into a Docker container. 
 
-* **Upload your container to a container registry: **Once your container is created, you will need to upload it to a container registry. Cloud Run supports a variety of container registries, including Google Container Registry (GCR), Docker Hub, and others. You can use the gcloud command-line tool or the Cloud Console to push your container to the registry.
+* **Upload your container to a container registry:** Once your container is created, you will need to upload it to a container registry. Cloud Run supports a variety of container registries, including Google Container Registry (GCR), Docker Hub, and others. You can use the gcloud command-line tool or the Cloud Console to push your container to the registry.
 
 For these first 2 points, you just need to run this command
 
@@ -262,7 +188,7 @@ For these first 2 points, you just need to run this command
 
 The gcloud builds submit command is used to *build and submit* a Docker container to the Google Container Registry.
 
-* **Create a Cloud Run service: **After your container is uploaded to the registry, you can create a new Cloud Run service using the Cloud Console or the gcloud command-line tool. You will need to specify the container image and the desired settings for your service, such as the amount of memory and CPU resources to allocate, the maximum number of instances to run, and the network settings.
+* **Create a Cloud Run service:** After your container is uploaded to the registry, you can create a new Cloud Run service using the Cloud Console or the gcloud command-line tool. You will need to specify the container image and the desired settings for your service, such as the amount of memory and CPU resources to allocate, the maximum number of instances to run, and the network settings.
 
 ![Create a Cloud Run service](https://cdn-images-1.medium.com/max/5490/1*XDp8qlFiiXzflO2JyrcXXQ.png)
 
