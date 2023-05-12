@@ -14,7 +14,7 @@ One of these extensions is indeed the [node-red-contrib-google-cloud](https://fl
 
 ## Media upload flow
 
-The image below shows the full Node-RED flow used to upload the media to Cloud Storage. The first node is just an ingestion node that triggers the flow every 5 seconds, after that we have an email node. This node is used to repeatedly get emails from POP3 or IMAP servers and forward them on as a msg if not already seen. The email node is not a default node so to use it make sure to install the *node-red-node-email *package following the same steps shown before for the Google package.
+The image below shows the full Node-RED flow used to upload the media to Cloud Storage. The first node is just an ingestion node that triggers the flow every 5 seconds, after that we have an email node. This node is used to repeatedly get emails from POP3 or IMAP servers and forward them on as a msg if not already seen. The email node is not a default node so to use it make sure to install the *node-red-node-email* package following the same steps shown before for the Google package.
 
 ![Node-RED flow used to upload camera traps media to Cloud Storage](https://cdn-images-1.medium.com/max/2960/1*Hhodeqz7JUpVwErF9iXjfQ.png)
 
@@ -24,7 +24,7 @@ To create a bucket, go to the Cloud Storage Buckets page in the Google Cloud con
 
 ![Create Bucket page](https://cdn-images-1.medium.com/max/2000/1*QV9BzChSMLqzDNXqqUPnEA.png)
 
-Finally, we have 2 debug nodes, in dark green, to debug respectively the read email and the output of the gcp write node. The nodes in pink, instead, are used to display the attachments. Note that also these ones are additional nodes. They are part of the *node-red-contrib-image-tools *package and they work only with images. If you try to display a video an error message will be displayed as in the picture above.
+Finally, we have 2 debug nodes, in dark green, to debug respectively the read email and the output of the gcp write node. The nodes in pink, instead, are used to display the attachments. Note that also these ones are additional nodes. They are part of the *node-red-contrib-image-tools* package and they work only with images. If you try to display a video an error message will be displayed as in the picture above.
 
 ## The final touch
 
