@@ -43,8 +43,11 @@ The goal of the project was to use an ML approach to ingest the data coming from
 <!-- USAGE -->
 ## Usage
 
-To get a local copy up and running follow these simple example steps.
+*cloud function*: This folder contains the complete cloud function code and all the instructions needed to recreate it in GCP.
 
+*web app*: This folder contains the complete streamlit app code and all the instructions needed to deploy it in Cloud Run.
+
+*node red flows*: This folder contains the JSON files of used the Node-RED flows and all the instructions needed to import them in your node-RED environment.
 
 <!-- CONTACT -->
 ## Contact
