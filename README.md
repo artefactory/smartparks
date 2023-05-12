@@ -29,6 +29,8 @@ The goal of the project was to use an ML approach to ingest the data coming from
 
 ### Built With
 
+<img src="images/workflow.png" alt="Project Workflow" width="100%">
+
 - [Cloud Storage](https://cloud.google.com/storage/) - Used to store the camera trap media
 - [BigQuery](https://cloud.google.com/bigquery) - Used to store the API responses
 - [Cloud Vision API](https://cloud.google.com/vision/) - Used for image analysis 
@@ -37,9 +39,6 @@ The goal of the project was to use an ML approach to ingest the data coming from
 - [Cloud Functions](https://cloud.google.com/functions/) - Used as core component of the workflow
 - [Node-RED](https://nodered.org/) - Used to create events in Earth Ranger 
 - [Streamlit](https://streamlit.io/) - Used to develop the Web App
-
-
-<img src="images/workflow.png" alt="Project Workflow" width="100%">
 
 <!-- USAGE -->
 ## Usage
