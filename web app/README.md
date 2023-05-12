@@ -99,50 +99,9 @@ As you can see the only different point is the last one. The Streamlit app will 
 
 You just have to insert the missing data by copying those values from the JSON key file you just created.
 
-We defined 2 utils functions to read respectively from Cloud Storage and from BigQuery. The first one is run_query that executes the SQL query given as an argument and returns the result as pandas dataframe.
+We defined 2 utils functions to read respectively from Cloud Storage and from BigQuery. The first one is `run_query` that executes the SQL query given as an argument and returns the result as pandas dataframe. The other one is `read_media` that retrieves the media content given its name and the name of the GCP Cloud storage bucket where the media is saved.
 
-    # utils.py
-    
-    # Create API client.
-    credentials = service_account.Credentials.from_service_account_info(
-        st.secrets["gcp_service_account"]
-    )
-    
-    # Perform query.
-    @st.cache_data(ttl=600)
-    def run_query(query: str) -> pd.DataFrame:
-        """
-        Executes the given query and return the result as pandas dataframe
-        Args:
-            query (str): SQL query to be executed
-        Returns:
-            pd.Dataframe: The dataframe resulting from the query
-        """
-        df = pd.read_gbq(query, credentials=credentials)
-        return df
-
-The other one is read_media that retrieves the media content given its name and the name of the GCP Cloud storage bucket where the media is saved.
-
-    # utils.py
-    
-    # Retrieve media content.
-    # Uses st.cache_data to only rerun when the query changes or after 10 min.
-    @st.cache_data(ttl=600)
-    def read_media(bucket_name, file_name):
-        """Retrieve the media content.
-    
-        Args:
-            bucket_name (string): Name of the GCP Cloud storage bucket where the media is saved
-            file_name (string): Name of the media
-    
-        Returns:
-            String: media content
-        """
-        bucket = client.bucket(bucket_name)
-        data = bucket.blob(file_name).download_as_bytes()
-        return data
-
-Both the functions make use of the st.cache_datadecorator to only rerun the function when the query changes or after ttl seconds.
+Both the functions make use of the `st.cache_data` decorator to only rerun the function when the query changes or after ttl seconds.
 
 ## How it looks like 
 
